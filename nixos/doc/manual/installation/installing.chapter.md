@@ -133,14 +133,14 @@ update /etc/fstab.
     which will be used by the boot partition.
 
     ```ShellSession
-    # parted /dev/sda -- mkpart primary 512MiB -8GiB
+    # parted /dev/sda -- mkpart "nixos" 512MiB -8GiB
     ```
 
 3.  Next, add a *swap* partition. The size required will vary according
-    to needs, here a 8GiB one is created.
+    to needs, here an 8GiB one is created.
 
     ```ShellSession
-    # parted /dev/sda -- mkpart primary linux-swap -8GiB 100%
+    # parted /dev/sda -- mkpart "swap" linux-swap -8GiB 100%
     ```
 
     ::: {.note}
@@ -153,7 +153,7 @@ update /etc/fstab.
     reserved 512MiB at the start of the disk.
 
     ```ShellSession
-    # parted /dev/sda -- mkpart ESP fat32 1MiB 512MiB
+    # parted /dev/sda -- mkpart "boot" fat32 1MiB 512MiB
     # parted /dev/sda -- set 3 esp on
     ```
 
@@ -208,14 +208,14 @@ Use the following commands:
     independent from device changes. For example:
 
     ```ShellSession
-    # mkfs.ext4 -L nixos /dev/sda1
+    # mkfs.ext4 -L "nixos" /dev/sda1
     ```
 
 -   For creating swap partitions: `mkswap`. Again it's recommended to
     assign a label to the swap partition: `-L label`. For example:
 
     ```ShellSession
-    # mkswap -L swap /dev/sda2
+    # mkswap -L "swap" /dev/sda2
     ```
 
 -   **UEFI systems**
@@ -225,7 +225,7 @@ Use the following commands:
     example:
 
     ```ShellSession
-    # mkfs.fat -F 32 -n boot /dev/sda3
+    # mkfs.fat -F 32 -n "boot" /dev/sda3
     ```
 
 -   For creating LVM volumes, the LVM commands, e.g., `pvcreate`,
@@ -258,7 +258,7 @@ Use the following commands:
     configuration.
 
     ```ShellSession
-    # swapon /dev/sda2
+    # swapon /dev/disk/by-label/swap
     ```
 
 4.  You now need to create a file `/mnt/etc/nixos/configuration.nix`
